@@ -4,7 +4,7 @@ const { app, Menu, Tray, BrowserWindow } = electron;
 
 app.on('ready', () => {
     console.log("App is loaded and ready");
-    tray = new Tray(`${__dirname}/icon.png`);
+    tray = new Tray(`${__dirname}/email.ico`);
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Item1', type: 'radio' },
         { label: 'Item2', type: 'radio' },
@@ -14,7 +14,7 @@ app.on('ready', () => {
     tray.setToolTip('This is my application.');
     tray.setContextMenu(contextMenu);
     const mainWindow = new BrowserWindow({
-        icon: `${__dirname}/icon.png`,
+        icon: `${__dirname}/email.ico`,
         title: 'Video info',
         width: 380,
         height: 620
