@@ -1,113 +1,104 @@
-const {app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
-const url = require('url');
-const path = require('path');
-let $ = require('jquery');
-let fs = require('fs');
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html>
+<!--<![endif]-->
 
-let win;
-let tray;
-
-function createWindow() { 
-    tray = new Tray(`${__dirname}/res/images/icon.png`);
-    const contextMenu = Menu.buildFromTemplate([
-        { label: 'Item1', type: 'radio' },
-        { label: 'Item2', type: 'radio' },
-        { label: 'Item3', type: 'radio', checked: true },
-        { label: 'Item4', type: 'radio' }
-    ]);
-    console.log("App is loaded and ready");
-    tray.setToolTip('This is my application.');
-    tray.setContextMenu(contextMenu);
-    win = new BrowserWindow({
-        width: 380, 
-        height: 600,
-        title: 'Emailer',
-        autoHideMenuBar: true,
-        icon: path.join(__dirname, 'res/images/icon.png')
-        });
-    win.loadURL(url.format ({ 
-        pathname: path.join(__dirname, 'index.html'), 
-        protocol: 'file:', 
-        slashes: true
-    }));
-};
-
-ipcMain.on('request:contacts', (event, fileName) => {
-    console.log("File data requested for: " +fileName);
-    //Check if file exists
-    let data;
-
-    if(fs.existsSync(fileName)) {
-        data = fs.readFileSync(fileName, 'utf8').split('\n');
-        console.log(data);
-    } else {
-        console.log("File Doesn\'t Exist. Creating new file.");
-        fs.writeFile(fileName, '', (err) => {
-            if(err)
-                console.log(err);
-        });
-        data = "";
-    }
-     win.webContents.send('return:contacts', data);
-});
-
-ipcMain.on('request:addContact', (event, contact, fileName) => {
-
-    let newLine = contact+"\n";
-    let msg;
-    let [ dept, title, name, email ] = contact.split(',');
-
-    if(textFileContains(email, fileName, 'utf8')){
-        msg = "A contact with that email address already exists.\nPlease try again."
-        win.webContents.send('return:addContactError', msg);
-    }else{
-        fs.appendFile(fileName, newLine);
-        msg = "The contact has been successfully added."
-        win.webContents.send('return:addContactSuccess', msg, contact);
-    }
-});
-
-ipcMain.on('request:removeContact', (event, row, fileName) => {
-
-    let msg;
-    let index = row - 1;
-    let data = fs.readFileSync(fileName, 'utf8').split('\n');
-    let removedContact = data.splice(index, 1);
-    fs.writeFile(fileName, '', function() {
-        data.forEach((contact) => {
-            if(contact !== ''){
-                let newLine = contact + '\n';
-                fs.appendFile(fileName, newLine);
-            }
-        });
-        let [ dept, title, name, email ] = String(removedContact).split(',');
-        msg = name + " has been removed from your contacts."
-        win.webContents.send('return:removeContactSuccess', msg);
-    });
-});
-
-app.on('window-all-closed', () => {
-    app.quit();
-});
-
-/*
-* A function to search for a string line by line in a text file.
-* @param {string} string - the string to search for in the text file.
-* @param {string} filePath - the path and name of the file to search in. The reference directory is the directory where this file resides.
-* @param {string} charType - the character code of the text file to search.
-* @return - returns a boolean value of false if the file does not contain the string and a value of true if it does contain the string.
-*/
-let textFileContains = function(string, filePath, charType){
-
-    let arrToCheck = fs.readFileSync(filePath, charType).split('\n');
-    let result = false;
-
-    arrToCheck.forEach((contact, index) => {
-        if(contact.includes(string)){
-            result = true;
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Emailer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-main="js/config" src="js/require.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            text-align: center;
         }
-    });
-    return result;
-};
+        
+        .main-spinner {
+            width: 5vw;
+        }
+        
+        .container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        
+        #background-img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            opacity: 0.3;
+        }
+        
+        .background-image-container {
+            position: fixed;
+            left: 17.5vw;
+            width: 65%;
+            height: 100vh;
+        }
+        
+        .container-view {
+            width: 65%;
+            margin: 0 auto;
+            margin-top: 165px;
+        }
+        
+        .map-container-view {
+            box-sizing: border-box;
+            padding-top: 80px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .spinner-container {
+            width: 100%;
+            margin: 30vh auto;
+        }
+        
+        .nav-bar {
+            box-sizing: border-box;
+            box-shadow: 0 2.5px 10px #111111;
+            background-color: #028299;
+            z-index: 10;
+            position: fixed;
+            width: 100%;
+            height: 80px;
+            margin: 0 auto;
+            padding: 10px 10px 10px 20px;
+        }
+        
+        .nav-spinner {
+            width: 10vw;
+        }
+    </style>
+</head>
 
-app.on('ready', createWindow);
+<body>
+    <div class="background-image-container">
+        <img id="background-img" src="res/images/email.jpg">
+    </div>
+    <nav class="nav-bar" id="nav" data-bind="html: template">
+
+    </nav>
+    <div class="container">
+        <div class="tabs-container-view" id="tabs-container-view" data-bind="html: template">
+            <!-- -->
+            <div class="spinner-container" id="spinner-view">
+                <img class="nav-spinner" src="res/images/loading-11.gif" />
+            </div>
+        </div>
+        <div class="tab-container-view" id="tab-container" data-bind="html: template"></div>
+        <div class="error-container-view" id="error-container-view" data-bind="html: template"></div>
+    </div>
+</body>
+
+</html>
