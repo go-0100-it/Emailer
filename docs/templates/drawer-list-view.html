@@ -1,7 +1,7 @@
 <!-- -->
 <div class="drawer-menu-container" id="drawer-menu-container" data-bind="css: expandedClass">
     <div class="drawer-menu" id="drawer-menu" data-bind="css: expandedClass">
-        <h2 class="drawer-menu-header">Menu</h2>
+        <h2 class="drawer-menu-header">MENU</h2>
         <hr/>
 
         <!-- Places list -->
@@ -14,9 +14,8 @@
         </div>
         <hr/>
         <ul class="drawer-menu-list">
-            <li class="drawer-list-item smooth">
-                <!-- data-bind="click: $parent.onSettingsClick" -->
-                <div class="item-details"><span class="li-name">Options</span></div>
+            <li class="drawer-list-item smooth" data-bind="click: onClick">
+                <div class="item-details"><span class="li-name">Settings</span></div>
             </li>
         </ul>
     </div>
