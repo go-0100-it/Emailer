@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html>
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Neighborhood Map</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-main="js/config" src="js/require.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            text-align: center;
+        }
+        
+        .main-spinner {
+            width: 5vw;
+        }
+        
+        .container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        
+        #background-img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            opacity: 0.3;
+        }
+        
+        .background-image-container {
+            position: fixed;
+            left: 17.5vw;
+            width: 65%;
+            height: 100vh;
+        }
+        
+        .container-view {
+            width: 65%;
+            margin: 0 auto;
+            margin-top: 165px;
+        }
+        
+        .map-container-view {
+            box-sizing: border-box;
+            padding-top: 80px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .spinner-container {
+            width: 100%;
+            margin: 30vh auto;
+        }
+        
+        .nav-bar {
+            box-sizing: border-box;
+            box-shadow: 0 2.5px 10px #111111;
+            background-color: #028299;
+            z-index: 10;
+            position: fixed;
+            width: 100%;
+            height: 80px;
+            margin: 0 auto;
+            padding: 10px 10px 10px 20px;
+        }
+        
+        .nav-spinner {
+            width: 10vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-image-container">
+        <img id="background-img" src="res/images/email.jpg">
+    </div>
+    <nav class="nav-bar" id="nav" data-bind="html: template">
+
+    </nav>
+    <div class="container">
+        <div class="tabs-container-view" id="tabs-container-view" data-bind="html: template">
+            <!-- -->
+            <div class="spinner-container" id="spinner-view">
+                <img class="nav-spinner" src="res/images/loading-11.gif" />
+            </div>
+        </div>
+        <div class="tab-container-view" id="tab-container" data-bind="html: template"></div>
+        <div class="error-container-view" id="error-container-view" data-bind="html: template"></div>
+    </div>
+</body>
+
+</html>

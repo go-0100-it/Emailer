@@ -1,0 +1,26 @@
+<!-- -->
+<div class="drawer-menu-container" id="drawer-menu-container" data-bind="css: expandedClass">
+    <div class="drawer-menu" id="drawer-menu" data-bind="css: expandedClass">
+        <h2 class="drawer-menu-header">Menu</h2>
+        <hr/>
+
+        <!-- Places list -->
+        <div class="list-container">
+            <ul class="drawer-menu-list" data-bind="foreach: { data: items, as: 'item' }">
+                <li data-bind="click: $parent.onClick" class="drawer-list-item smooth">
+                    <div class="item-details"><img src=""><span class="li-name" data-bind="text: item.name"></span></div>
+                </li>
+            </ul>
+        </div>
+        <hr/>
+        <ul class="drawer-menu-list">
+            <li class="drawer-list-item smooth">
+                <!-- data-bind="click: $parent.onSettingsClick" -->
+                <div class="item-details"><span class="li-name">Options</span></div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Drawer toggle button -->
+    <div for="drawer-menu-check" class="drawer-toggler" data-bind="click: toggleDrawerList, css: expandedClass"><span class="drawer-menu-span">≡</span></div>
+</div>
