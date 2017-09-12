@@ -25,8 +25,8 @@ requirejs.config({
 
         /*ViewsModel modules*/
         drawer_list_view_model: 'view-models/drawer-list-view-model',
-        tabs_view_model: 'view-models/tabs-view-model',
-        events_list_view_model: 'view-models/events-list-view-model',
+        create_emailer_view_model: 'view-models/create-emailer-view-model',
+        edit_emailer_view_model: 'view-models/edit-emailer-view-model',
         spinner_view_model: 'view-models/spinner-view-model',
         error404_view_model: 'view-models/error404-view-model'
     }
@@ -41,9 +41,7 @@ requirejs(
         'util',
         'css!css/navbar-view.css',
         'css!css/main-view.css',
-        'css!css/drawer-menu.css',
-        'css!css/tabs-view.css',
-        'css!css/error404-view.css'
+        'css!css/drawer-menu.css', 
     ],
     function(
         $,
@@ -58,7 +56,7 @@ requirejs(
             [
                 'drawer-list-view',
                 'tabs-view',
-                'events-view',
+                'create-emailer-view',
                 'spinner-view',
                 'error404-view'
             ],
