@@ -73,13 +73,28 @@ define(
 
 
             /**
-             * A function to capture the place the user selected as the place data to be added as the users new place.
-             * @param {object} place - the place from the results array selected by the user.
+             * A function to capture the item the user selected.
+             * @param {object} item - the item from the results array selected by the user.
              */
-            this.onClick = function(item) {
-                window.alert('You clicked: ' + item.name);
-            };
+            this.onClick = function() {
 
+                let txt = $(event.target).text();
+
+                if(txt.indexOf("Create") !== -1){
+
+                    window.alert('You clicked "Create new emailer".');
+                    Backbone.history.navigate('#create-emailer', { trigger: true });
+
+                }else if(txt.indexOf("Edit") !== -1){
+
+                    window.alert('You clicked "Edit existing emailer".');
+
+                }else if(txt.indexOf("Settings") !== -1){
+
+                    window.alert('You clicked "Settings".');
+
+                }
+            };
 
             // returning this drawerListViewModel
             return this;
