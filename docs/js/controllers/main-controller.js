@@ -5,7 +5,7 @@ define([
         'jquery',
         'knockout',
         'util',
-        'drawer_list_view_model', ,
+        'drawer_list_view_model',
         'data_controller'
     ],
     function(
@@ -33,22 +33,19 @@ define([
             let HIDDEN = false;
 
             // Creating a new Data controller object.
-            //_this.dataController = new DataController();
-
-
+            _this.dataController = new DataController();
 
             /**
              * A function to create, if not yet created, a new DrawerListViewModel, fetch the Drawer list data and render the Drawer List View html
              * template and returned Drawer list data to the UI.
-             * @param {object} place - the place object to derive the location from to pass to the map view (to center the map on the place coordinates).
              */
-            this.renderDrawerListView = function(menu) {
+            this.renderDrawerListView = function() {
 
                 // if the drawerListViewModel has not been created previously.
                 if (!_this.drawerListViewModel) {
 
                     // Create a new DrawerListViewModel.
-                    _this.drawerListViewModel = new DrawerListViewModel(menu);
+                    _this.drawerListViewModel = new DrawerListViewModel(_this.dataController.getMenu());
 
                     // Apply the KO bindings between the newly created view model and the existing view container.
                     ko.applyBindings(_this.drawerListViewModel, $('#nav')[0]);
@@ -71,169 +68,113 @@ define([
 
 
             /**
-             * A function to create a new tabs view if one was not already created or show the previously created but hidden tabs view then
-             * render the tab view.
-             * @param {object} place - the place object to render in the tabs view.
-             * @param {object} view - the type of tab view requested to be rendered for the tabs view.  
-             */
-            this.renderTabsView = function(place, view) {
-
-                // calling the renderDrawerListView to render the drawer and map if it has not already been rendered.
-                _this.renderDrawerListView(place);
-
-                // hide the map view if it is visible.
-                _this.setMapVisibility(HIDDEN);
-
-                // hide the error view if it is visible.
-                _this.setErrorVisibility(HIDDEN);
-
-                // if the tabsViewModel exists.
-                if (_this.tabsViewModel) {
-
-                    // show the tabs view and update the place to display.
-                    _this.setTabsVisibility(VISIBLE, null, place);
-
-                    // if the tabsViewModel does not exist
-                } else {
-
-                    // create the tabs view.
-                    _this.createTabsView(place);
-                }
-
-                // render the spinner to show while we wait for the data request response.
-                _this.renderSpinner();
-
-                // calling the renderTabView function to render the requested tab, will also fetch the corresponding data.
-                _this.renderTabView(place, view);
-            };
-
-
-
-
-            /**
-             * A function to create the tabs view and apply KO bindings between the view and view model.
-             * @param {object} place - the place object to render in the tabs view.
-             */
-            this.createTabsView = function(place) {
-
-                // requiring the view model module and the css for the view
-                requirejs(
-                    [
-                        'tabs_view_model',
-                        'css!css/tabs-view.css'
-                    ],
-                    function(
-                        TabsViewModel
-                    ) {
-                        // creating the tabs view model
-                        _this.tabsViewModel = new TabsViewModel(place);
-
-                        // initially applying the bindings to the empty container so the template can be rendered.
-                        ko.applyBindings(_this.tabsViewModel, $('#tabs-container-view')[0]);
-
-                        // rendering the html template for the tabs view.
-                        _this.tabsViewModel.template(tpl.get('tabs-view'));
-
-                        // removing the bindings from the container because we need to apply the bindings to the newly rendered html template.
-                        ko.cleanNode($('#tabs-container-view')[0]);
-
-                        // applying the bindings to the new view
-                        ko.applyBindings(_this.tabsViewModel, $('#tabs-view')[0]);
-                    });
-            };
-
-
-
-            /**
              * A function to initialize the rendering of a tab view. Creates view config data and initializes the data requests.
-             * @param {object} place - the place object (location) for which the data is being requested.
              * @param {string} view - the type of view needed to display the requested data.
              */
-            this.renderTabView = function(place, view) {
+            this.renderViews = function(emailer, view) {
 
                 // requiring the view model modules and css required for the views.
                 requirejs(
                     [
-                        'css!css/weather-view.css',
-                        'css!css/events-view.css',
-                        'events_list_view_model',
-                        'weather_list_view_model',
-                        'restaurants_list_view_model'
+                        'css!css/spinner-view.css',
+                        'css!css/error404-view.css',
+                        'css!css/create-emailer-view.css',
+                        'css!css/edit-emailer-view.css',
+                        'create_emailer_view_model',
+                        'edit_emailer_view_model',
+                        'error404_view_model'
                     ],
                     function(
-                        weatherCss,
-                        eventsCss,
-                        EventsListViewModel,
-                        WeatherListViewModel,
-                        RestaurantsListViewModel
+                        spinnerCss,
+                        error404Css,
+                        createEmailerCss,
+                        editEmailerCss,
+                        CreateEmailerViewModel,
+                        EditEmailerViewModel,
+                        Error404ViewModel
                     ) {
+                        let isError = false;
+                        let viewConfigData;
+
+                        console.log(view);
 
                         switch (view) {
-                            case 'events':
+        
+                            case 'createEmailer':
 
                                 // Creating an object literal containing the necessary data to later (after receiving a data response) render
                                 // the view corresponding to the data returned.
                                 viewConfigData = {
-                                    viewVariable: 'eventsView',
-                                    viewModelVariable: 'eventsListViewModel',
-                                    viewModelConstructor: EventsListViewModel,
-                                    template: tpl.get('events-view'),
-                                    el: '#events-view',
-                                    place: place
+                                    viewVariable: 'createEmailerView',
+                                    viewModelVariable: 'createEmailerViewModel',
+                                    viewModelConstructor: CreateEmailerViewModel,
+                                    template: tpl.get('create-emailer-view'),
+                                    el: '#create-emailer-view',
                                 };
-
-                                _this.tabsViewModel.title('Local Events');
-
-                                // Calling the queryCache function to first check if the requested data has been cached, passing in 2 functions,
-                                // the first one will be called if no data was found in the cache.  The second function will be called when data
-                                // becomes available, either by retriving it from the cache or receiving a response from a AJAX request.
-                                _this.dataController.queryCache(viewConfigData, _this.dataController.getEventsDataList, _this.renderView);
                                 break;
 
-                            case 'weather':
+                            case 'editEmailer':
 
                                 // Creating an object literal containing the necessary data to later (after receiving a data response) render
                                 // the view corresponding to the data returned.
                                 viewConfigData = {
-                                    viewVariable: 'weatherView',
-                                    viewModelVariable: 'weatherListViewModel',
-                                    viewModelConstructor: WeatherListViewModel,
-                                    template: tpl.get('weather-view'),
-                                    el: '#weather-view',
-                                    place: place
+                                    viewVariable: 'editEmailerView',
+                                    viewModelVariable: 'editEmailerViewModel',
+                                    viewModelConstructor: EditEmailerViewModel,
+                                    template: tpl.get('edit-emailer-view'),
+                                    el: '#edit-emailer-view',
+                                    emailer: emailer
                                 };
-
-                                _this.tabsViewModel.title('Local Weather');
-
-                                // Calling the queryCache function to first check if the requested data has been cached, passing in 2 functions,
-                                // the first one will be called if no data was found in the cache.  The second function will be called when data
-                                // becomes available, either by retriving it from the cache or receiving a response from a AJAX request.
-                                _this.dataController.queryCache(viewConfigData, _this.dataController.getCurrentWeather, _this.renderView);
                                 break;
 
-                            case 'restaurants':
-
-
+                            case 'settings':
 
                                 // Creating an object literal containing the necessary data to later (after receiving a data response) render
                                 // the view corresponding to the data returned.
                                 viewConfigData = {
-                                    viewVariable: 'restaurantsView',
-                                    viewModelVariable: 'restaurantsListViewModel',
-                                    viewModelConstructor: RestaurantsListViewModel,
-                                    template: tpl.get('restaurants-view'),
-                                    el: '#restaurants-view',
-                                    place: place
+                                    viewVariable: 'settingsView',
+                                    viewModelVariable: 'settingsViewModel',
+                                    viewModelConstructor: SettingsViewModel,
+                                    template: tpl.get('settings-view'),
+                                    el: '#settings-view'
                                 };
-
-                                // setting the tabsViewModel title to display the correct title.
-                                _this.tabsViewModel.title('Local Restaurants');
-
-                                // Calling the queryCache function to first check if the requested data has been cached, passing in 2 functions,
-                                // the first one will be called if no data was found in the cache.  The second function will be called when data
-                                // becomes available, either by retriving it from the cache or receiving a response from a AJAX request.
-                                _this.dataController.queryCache(viewConfigData, _this.dataController.getRestaurantsList, _this.renderView);
                                 break;
+
+                            case 'error404':
+
+                                // Creating an object literal containing the necessary data to later (after receiving a data response) render
+                                // the view corresponding to the data returned.
+                                viewConfigData = {
+                                    viewVariable: 'error404View',
+                                    viewModelVariable: 'error404ViewModel',
+                                    viewModelConstructor: Error404ViewModel,
+                                    template: tpl.get('error404-view'),
+                                    el: '#error404-view'
+                                };
+                                isError = true;
+                                break;
+
+                            case 'spinner':
+
+                                // Creating an object literal containing the necessary data to later (after receiving a data response) render
+                                // the view corresponding to the data returned.
+                                viewConfigData = {
+                                    viewVariable: 'spinnerView',
+                                    viewModelVariable: 'spinnerViewModel',
+                                    viewModelConstructor: SpinnerViewModel,
+                                    template: tpl.get('spinner-view'),
+                                    el: '#spinner-view'
+                                };
+                                break;
+                        }
+                        if(!_this[viewConfigData.viewModelVariable]){
+
+                            _this.renderView(emailer, viewConfigData, isError)
+
+                        }else{
+
+                            _this.showView();
+
                         }
                     });
             };
@@ -250,7 +191,7 @@ define([
             this.renderView = function(data, vcd, isError) {
 
                 // Calling custom function to remove the currently rendered Tab view.
-                _this.removeCurrentTab();
+                _this.hideCurrentView();
 
                 // Creating the new view model from vcd (viewConfigData) parameter.
                 _this[vcd.viewModelVariable] = new vcd.viewModelConstructor(vcd.place, data, isError, _this);
@@ -271,7 +212,7 @@ define([
 
                 // Creating a object literal containing the currently active viewModel and currently visible element.
                 // Need this reference when removing the view.
-                _this.currentTab = { tab: $(vcd.el)[0], viewModel: _this[vcd.viewModelVariable] };
+                _this.currentView = { currentView: $(vcd.el)[0], viewModel: _this[vcd.viewModelVariable] };
             };
 
 
@@ -311,136 +252,16 @@ define([
 
 
             /**
-             * a function to remove the previously rendered tab.  This function is called prior to rendering a new tab. This is necessary to avoid massive
+             * a function to hide the previously rendered view.  This function is called prior to showing/rendering of a new view. This is necessary to avoid massive
              * memory leaks.
              */
-            this.removeCurrentTab = function() {
+            this.hideCurrentView = function() {
 
-                // if a tab exists
-                if (_this.currentTab) {
+                // if the view exists
+                if (_this.currentView) {
 
-                    // remove the existing tab
-                    ko.removeNode(_this.currentTab.tab);
-
-                    // there is no longer an existing tab so set the currentTab variable to null
-                    _this.currentTab = null;
+                    _this.currentView.viewModel.showView(false);
                 }
-            };
-
-
-
-            /**
-             * A function to set the Visibility of the tabs view.  Can be hidden by passing the boolean value HIDDEN(false) as the state parameter or 
-             * visible by passing the value VISIBLE(true) as the state parameter.
-             * @param {boolean} state - the boolean value indicating the visibility state requested.  True for visible, false for hidden.
-             * @param {boolean} remove - the boolean value indicating if the tab view is to be removed, passing true will remove the current tab false will not.
-             * @param {object} place - the place object to render in the tabs view.
-             */
-            this.setTabsVisibility = function(state, remove, place) {
-
-                // if a tabs view exists
-                if (_this.tabsViewModel) {
-
-                    // if a place object was pass in
-                    if (place) {
-
-                        // update the tabsViewModel place object to render to the view.
-                        _this.tabsViewModel.place(place);
-                    }
-
-                    // if the remove value is true
-                    if (remove) {
-
-                        // remove the current tab
-                        _this.removeCurrentTab();
-                    }
-
-                    // call the showTabs function passing the requested state.
-                    _this.tabsViewModel.showTabs(state);
-                }
-            };
-
-
-
-
-            /**
-             * A function to set the visibility of the errorViewModel's data-bound element.
-             * @param {boolean} state - the boolean value indicating the visibility state requested.  True for visible, false for hidden.
-             */
-            this.setErrorVisibility = function(state) {
-
-                // Checking if the view model exists
-                if (_this.errorViewModel) {
-
-                    // If it does exist, set the data-bound element 
-                    _this.errorViewModel.showError(state);
-                }
-            };
-
-
-
-
-            /**
-             * A function to create an error view if one does not already exist or show the previously created hidden view.
-             */
-            this.renderErrorView = function() {
-
-                // calling render the drawer list view, this renders the drawer list view and the map ifb they don't already exist.
-                _this.renderDrawerListView();
-
-                // hiding the map view
-                _this.setMapVisibility(HIDDEN);
-
-                // hiding the tabs view
-                _this.setTabsVisibility(HIDDEN, null, true);
-
-                // if the error view exists
-                if (_this.errorViewModel) {
-
-                    // show the existing error view
-                    _this.setErrorVisibility(VISIBLE);
-
-                    // if the error view does not exist
-                } else {
-
-                    // create the error view
-                    _this.createErrorView();
-                }
-            };
-
-
-
-
-            /**
-             * A function to create an errorViewModel and render the error html template.  This error view is displayed when
-             * the requested URL is not found.
-             */
-            this.createErrorView = function() {
-
-                // requiring the view model module and css required for the view.
-                requirejs(
-                    [
-                        'error404_view_model',
-                        'css!css/error404-view.css'
-                    ],
-                    function(
-                        ErrorViewModel
-                    ) {
-                        // creating the errorViewModel to render the error html template.
-                        _this.errorViewModel = new ErrorViewModel();
-
-                        // applyiung the bindings to the view model and the dom element.
-                        ko.applyBindings(_this.errorViewModel, $('#error-container-view')[0]);
-
-                        // updating the viewModel template to render the html.
-                        _this.errorViewModel.template(tpl.get('error404-view'));
-
-                        // removing the bindings from the container view.
-                        ko.cleanNode($('#error-container-view')[0]);
-
-                        // applying new bindings to the view models newly updated html template.
-                        ko.applyBindings(_this.errorViewModel, $('#error-view')[0]);
-                    });
             };
         };
 
