@@ -99,8 +99,10 @@ define([
                         console.log(view);
 
                         switch (view) {
-        
+
                             case 'createEmailer':
+
+                                window.alert("Routed to create");
 
                                 // Creating an object literal containing the necessary data to later (after receiving a data response) render
                                 // the view corresponding to the data returned.
@@ -108,6 +110,7 @@ define([
                                     viewVariable: 'createEmailerView',
                                     viewModelVariable: 'createEmailerViewModel',
                                     viewModelConstructor: CreateEmailerViewModel,
+                                    containerView: '#create-emailer-container-view',
                                     template: tpl.get('create-emailer-view'),
                                     el: '#create-emailer-view',
                                 };
@@ -121,6 +124,7 @@ define([
                                     viewVariable: 'editEmailerView',
                                     viewModelVariable: 'editEmailerViewModel',
                                     viewModelConstructor: EditEmailerViewModel,
+                                    containerView: '#edit-emailer-container-view',
                                     template: tpl.get('edit-emailer-view'),
                                     el: '#edit-emailer-view',
                                     emailer: emailer
@@ -135,6 +139,7 @@ define([
                                     viewVariable: 'settingsView',
                                     viewModelVariable: 'settingsViewModel',
                                     viewModelConstructor: SettingsViewModel,
+                                    containerView: '#settings-container-view',
                                     template: tpl.get('settings-view'),
                                     el: '#settings-view'
                                 };
@@ -148,6 +153,7 @@ define([
                                     viewVariable: 'error404View',
                                     viewModelVariable: 'error404ViewModel',
                                     viewModelConstructor: Error404ViewModel,
+                                    containerView: '#error404-container-view',
                                     template: tpl.get('error404-view'),
                                     el: '#error404-view'
                                 };
@@ -162,16 +168,17 @@ define([
                                     viewVariable: 'spinnerView',
                                     viewModelVariable: 'spinnerViewModel',
                                     viewModelConstructor: SpinnerViewModel,
+                                    containerView: '#spinner-container-view',
                                     template: tpl.get('spinner-view'),
                                     el: '#spinner-view'
                                 };
                                 break;
                         }
-                        if(!_this[viewConfigData.viewModelVariable]){
+                        if (!_this[viewConfigData.viewModelVariable]) {
 
                             _this.renderView(emailer, viewConfigData, isError)
 
-                        }else{
+                        } else {
 
                             _this.showView();
 
@@ -197,19 +204,20 @@ define([
                 _this[vcd.viewModelVariable] = new vcd.viewModelConstructor(vcd.place, data, isError, _this);
 
                 // Checking if the element has bindings applied. If no bindings have previously been applied to this element then apply bindings. 
-                if (!!!ko.dataFor($('#tab-container')[0])) {
-                    ko.applyBindings(_this[vcd.viewModelVariable], $('#tab-container')[0]);
+                if (!!!ko.dataFor($(vcd.containerView)[0])) {
+                    ko.applyBindings(_this[vcd.viewModelVariable], $(vcd.containerView)[0]);
                 }
 
                 // Setting the html template of the newly created viewModel 
                 _this[vcd.viewModelVariable].template(vcd.template);
 
                 // Removing the KO bindings once the template has been rendered.
-                ko.cleanNode($('#tab-container')[0]);
+                ko.cleanNode($(vcd.containerView)[0]);
 
+                console.log('Step-1');
                 // Applying the bindings to the newly rendered html template.
                 ko.applyBindings(_this[vcd.viewModelVariable], $(vcd.el)[0]);
-
+                console.log('Step-2');
                 // Creating a object literal containing the currently active viewModel and currently visible element.
                 // Need this reference when removing the view.
                 _this.currentView = { currentView: $(vcd.el)[0], viewModel: _this[vcd.viewModelVariable] };
