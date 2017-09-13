@@ -41,7 +41,7 @@ requirejs(
         'util',
         'css!css/navbar-view.css',
         'css!css/main-view.css',
-        'css!css/drawer-menu.css', 
+        'css!css/drawer-menu.css',
     ],
     function(
         $,
@@ -55,8 +55,8 @@ requirejs(
         tpl.loadTemplates(
             [
                 'drawer-list-view',
-                'tabs-view',
                 'create-emailer-view',
+                'edit-emailer-view',
                 'spinner-view',
                 'error404-view'
             ],
