@@ -48,7 +48,8 @@ define(
 
                 // Calling function @ Maincontroller to create the drawerListView
                 //NOTE: *******************************************************************************************************
-                MainController.renderViews( {}, 'createEmailer');
+                MainController.renderViews({}, 'createEmailer');
+                window.alert("Routing to create");
             },
 
 
@@ -59,7 +60,7 @@ define(
 
                 // Calling function @ Maincontroller to create the drawerListView
                 //NOTE: *******************************************************************************************************
-                MainController.renderViews( {}, 'editEmailer');
+                MainController.renderViews({}, 'editEmailer');
             },
 
 
@@ -70,7 +71,7 @@ define(
 
                 // Calling the renderErrorView function @ Maincontroller to create the Error view, passing in the view type as a string
                 // to the render function to determine tab view required.
-                MainController.renderViews( {}, 'error404');
+                MainController.renderViews({}, 'error404');
             }
         });
 
