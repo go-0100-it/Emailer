@@ -25,8 +25,10 @@ requirejs.config({
 
         /*ViewsModel modules*/
         drawer_list_view_model: 'view-models/drawer-list-view-model',
+        emailer_list_view_model: 'view-models/emailer-list-view-model',
         create_emailer_view_model: 'view-models/create-emailer-view-model',
         edit_emailer_view_model: 'view-models/edit-emailer-view-model',
+        settings_view_model: 'view-models/settings-view-model',
         spinner_view_model: 'view-models/spinner-view-model',
         error404_view_model: 'view-models/error404-view-model'
     }
@@ -39,6 +41,7 @@ requirejs(
         'backbone',
         'knockout',
         'util',
+        'css!css/bootstrap-min.css',
         'css!css/navbar-view.css',
         'css!css/main-view.css',
         'css!css/drawer-menu.css',
@@ -55,8 +58,10 @@ requirejs(
         tpl.loadTemplates(
             [
                 'drawer-list-view',
+                'emailer-list-view',
                 'create-emailer-view',
                 'edit-emailer-view',
+                'settings-view',
                 'spinner-view',
                 'error404-view'
             ],
