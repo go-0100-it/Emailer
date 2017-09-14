@@ -1,13 +1,55 @@
 <!-- -->
-<div id="create-emailer-view" class="tab-content current" data-bind="visible: showView">
-    <div class="tab-list-container">
-        <div class="badge-container">
-            <div class="eventful-badge eventful-medium">
-                <a target="_blank" href="http://eventful.com/">
-                    <img src="http://api.eventful.com/images/powered/eventful_88x31.gif" alt="Local Events, Concerts, Tickets">
-                    <p>Events by Eventful</p>
-                </a>
+<div id="create-emailer-view" class="tab-content" data-bind="visible: showView">
+      <div class="container">
+            <div class="container-view" id="container-view">
+                  <h1>Create a new emailer</h1>
+                  <section class="" id="contacts-group" data-bind="visible: showContacts">
+                        <!-- ADD THIS LATER -->
+                        <!-- <div class="spinner-container">
+                              <img class="main-spinner" src="res/images/loading-11.gif" />
+                        </div> -->
+                        <h5 class="instruction">Next, lets specify the primary recipients of our email. Enter the details for each recipient below and click add.</h5>
+                        <div class = "form-group med-form">
+                              <input data-bind="value: dept" id="Dept" placeholder="Dept" class="form-control" required>
+                        </div>
+                        <div class = "form-group med-form">
+                              <input data-bind="value: title" id="Title" placeholder="Title" class="form-control" required>
+                        </div>
+                        <div class = "form-group small-form">
+                              <input data-bind="value: cc" id="cc" placeholder="cc?" class="form-control">
+                        </div>
+                        <div class="form-group">
+                              <input data-bind="value: name" id="Name" placeholder="Name" class="form-control" required>
+                        </div>
+                        <div class = "form-group">
+                              <input data-bind="value: email" id="Email" placeholder="Email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                              <button class="btn btn-primary" data-bind="click: onAddClick" id="add-to-list">ADD</button>
+                        </div>
+                        <div id="contact-list">
+                              <table class="table-striped" id="contact-table">
+                                    <tr class="tbrow">
+                                          <th class="col-xs-1 thcell">No.</th>
+                                          <th class="col-xs-1 thcell">Dept.</th>
+                                          <th class="col-xs-1 thcell">Title</th>
+                                          <th class="col-xs-4 thcell">Name</th>
+                                          <th class="col-xs-6 thcell">Email</th>
+                                    </tr>
+                              </table>
+                        </div>
+                  </section>
+                  <section class="" id="emailer-name-group" data-bind="visible: showName">
+                        <h5 class="instruction">To begin, let's give our new emailer a catchy name.</h5>
+                        <div class = "form-group">
+                              <input data-bind="value: emailerName" name="emailer-name" id="emailer-name" placeholder="Name" class="form-control" required>
+                        </div>
+                  </section>
+                  <section class="" id="emailer-details-group" data-bind="visible: showDetails">
+                  </section>
+                  <button class="btn btn-primary left" data-bind="click: onPrevClick, visible: showPrevBtn" id="prev-btn">PREV</button>
+                  <button class="btn btn-primary right" data-bind="click: onNextClick, visible: showNextBtn" id="next-btn">NEXT</button>
+                  <button class="btn btn-primary right" data-bind="click: onSaveClick, visible: showSaveBtn" id="save-btn">SAVE</button>
             </div>
-        </div>
-    </div>
+      </div>
 </div>
