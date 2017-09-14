@@ -8,6 +8,10 @@
     height: 100vh;
 }
 
+#drawer-menu{
+    line-height: normal;
+}
+
 .drawer-menu {
     position: relative;
     top: -10px;
@@ -43,7 +47,8 @@
     color: #DDDCDC;
     background-color: #1ABAD3;
     font-size: 50px;
-    font-weight: 900;
+    font-weight: normal;
+    line-height: normal;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 2.5px 10px #111111;
@@ -99,7 +104,7 @@
 .drawer-list-item {
     display: block;
     text-align: left;
-    padding: 0 20px 30px 20px;
+    padding: 20px;
     cursor: pointer;
 }
 
@@ -141,12 +146,13 @@
 }
 
 .item-details {
+    vertical-align: middle;
     width: 270px;
 }
 
 .li-name {
-    display: block;
-    padding: 25px 0 0 0;
+    vertical-align: middle;
+    margin-left: 10px;
     color: #026070;
     text-align: left;
     font-size: 24px;
@@ -154,6 +160,12 @@
 
 .li-name.search-results {
     padding-top: 0;
+}
+
+#menu-icon {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
 }
 
 .drawer-spinner {

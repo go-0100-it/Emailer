@@ -1,0 +1,27 @@
+.create-emailer-view-css-loaded {
+    height: 1px;
+}
+
+.right{
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.instruction {
+    margin: 40px 0 30px 0;
+}
+
+.med-form {
+    display: block;
+    float: left;
+    width: 40%;
+}
+
+.small-form {
+    display: block;
+    float: left;
+    width: 20%;
+}
