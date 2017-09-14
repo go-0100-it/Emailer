@@ -25,8 +25,9 @@ define(
                 // Calls the placesOnMap method when there is no hashtag in the url
                 '': 'main',
                 'main': 'main',
-                'create-emailer': 'create',
-                'edit-emailer': 'edit',
+                'create': 'create',
+                'edit': 'edit',
+                'settings': 'settings',
                 '*path': 'error404' // (default) this path is called for all other urls
             },
 
@@ -38,7 +39,7 @@ define(
 
                 // Calling function @ Maincontroller to create the drawerListView
                 //NOTE: *******************************************************************************************************
-                MainController.renderDrawerListView();
+                MainController.renderDrawerListView({}, 'listEmailer');
             },
 
             /**
@@ -49,7 +50,6 @@ define(
                 // Calling function @ Maincontroller to create the drawerListView
                 //NOTE: *******************************************************************************************************
                 MainController.renderViews({}, 'createEmailer');
-                window.alert("Routing to create");
             },
 
 
@@ -72,6 +72,17 @@ define(
                 // Calling the renderErrorView function @ Maincontroller to create the Error view, passing in the view type as a string
                 // to the render function to determine tab view required.
                 MainController.renderViews({}, 'error404');
+            },
+
+
+            /**
+             * A function to render the 404 error view for page not found
+             */
+            'settings': function() {
+
+                // Calling the renderErrorView function @ Maincontroller to create the Error view, passing in the view type as a string
+                // to the render function to determine tab view required.
+                MainController.renderViews({}, 'settings');
             }
         });
 
