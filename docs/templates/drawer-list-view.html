@@ -8,14 +8,14 @@
         <div class="list-container">
             <ul class="drawer-menu-list" data-bind="foreach: { data: items, as: 'item' }">
                 <li data-bind="click: $parent.onClick" class="drawer-list-item smooth">
-                    <div class="item-details"><img src=""><span class="li-name" data-bind="text: item.name"></span></div>
+                    <div class="item-details"><img id="menu-icon" data-bind="attr: { 'src': item.imgSrc }"><span class="li-name" data-bind="text: item.name"></span></div>
                 </li>
             </ul>
         </div>
         <hr/>
         <ul class="drawer-menu-list">
             <li class="drawer-list-item smooth" data-bind="click: onClick">
-                <div class="item-details"><span class="li-name">Settings</span></div>
+                <div class="item-details"><img id="menu-icon" src="res/images/settings-icon-png-14.png"><span class="li-name">Settings</span></div>
             </li>
         </ul>
     </div>
