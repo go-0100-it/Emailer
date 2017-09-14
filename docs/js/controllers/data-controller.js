@@ -106,9 +106,10 @@ define([],
             this.getMenu = function() {
 
                 let menu = [
-                    { id: 1, name: 'Create new emailer', imgSrc: '' },
-                    { id: 2, name: 'Edit existing emailer', imgSrc: '' },
-                    { id: 3, name: '', imgSrc: '' }
+                    { id: 1, name: 'Emailer list', imgSrc: 'res/images/list-icon.png' },
+                    { id: 2, name: 'Create new emailer', imgSrc: 'res/images/plus-icon-png-14.png' },
+                    { id: 3, name: 'Edit existing emailer', imgSrc: 'res/images/review-icon-png-14.png' },
+                    { id: 4, name: '', imgSrc: 'res/images/transparent.png' }
                 ];
                 return menu
             };
