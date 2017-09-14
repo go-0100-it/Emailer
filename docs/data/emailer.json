@@ -1,0 +1,27 @@
+{
+  "name": "My new emailer",
+  "primary_contacts": [
+      {
+        "dept": "MTC",
+        "title": "TL",
+        "name": "Dave Waters",
+        "email": "dave.waters@toyota.com"
+      },
+      {
+        "dept": "MTC",
+        "title": "GL",
+        "name": "Mark Smith",
+        "email": "mark.smith@toyota.com"
+      }
+  ],
+  "carbon_copy_contacts": [
+      {
+          "dept": "MTC",
+          "title": "GL",
+          "name": "Phil Fleming",
+          "email": "phil.fleming@toyota.com"
+      }
+  ],
+  "email_title": "My first emailer",
+  "email_body": "I've successfully created a auto emailer."
+}
