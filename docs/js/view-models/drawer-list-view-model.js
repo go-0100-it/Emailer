@@ -80,18 +80,25 @@ define(
 
                 let txt = $(event.target).text();
 
-                if(txt.indexOf("Create") !== -1){
+                if(txt.indexOf("list") !== -1){
 
-                    window.alert('You clicked "Create new emailer".');
-                    Backbone.history.navigate('#create-emailer', { trigger: true });
+                    Backbone.history.navigate('#main', { trigger: true });
+                    _this.toggleDrawerList();
+
+                }else if(txt.indexOf("Create") !== -1){
+
+                    Backbone.history.navigate('#create', { trigger: true });
+                    _this.toggleDrawerList();
 
                 }else if(txt.indexOf("Edit") !== -1){
 
-                    window.alert('You clicked "Edit existing emailer".');
+                    Backbone.history.navigate('#edit', { trigger: true });
+                    _this.toggleDrawerList();
 
                 }else if(txt.indexOf("Settings") !== -1){
 
-                    window.alert('You clicked "Settings".');
+                    Backbone.history.navigate('#settings', { trigger: true });
+                    _this.toggleDrawerList();
 
                 }
             };
