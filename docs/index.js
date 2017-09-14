@@ -15,12 +15,15 @@ function createWindow() {
         { label: 'Item3', type: 'radio', checked: true },
         { label: 'Item4', type: 'radio' }
     ]);
-    console.log("App is loaded and ready");
-    tray.setToolTip('This is my application.');
+    console.log("App is loaded and ready\n");
+    tray.setToolTip('Emailer App');
     tray.setContextMenu(contextMenu);
     win = new BrowserWindow({
         width: 380, 
-        height: 600,
+        height: 650,
+        minWidth: 380,
+        minHeight: 650,
+        maxWidth: 400,
         title: 'Emailer',
         autoHideMenuBar: true,
         icon: path.join(__dirname, 'res/images/icon.png')
@@ -55,12 +58,16 @@ ipcMain.on('request:addContact', (event, contact, fileName) => {
 
     let newLine = contact+"\n";
     let msg;
-    let [ dept, title, name, email ] = contact.split(',');
 
-    if(textFileContains(email, fileName, 'utf8')){
+    if(checkIfExists(contact[3], fileName, 'utf8')){
         msg = "A contact with that email address already exists.\nPlease try again."
         win.webContents.send('return:addContactError', msg);
     }else{
+        let str = JSON.stringify(contact);
+        fs.writeFile(fileName, str, (err) => {
+            if(err)
+                console.log(err);
+        });
         fs.appendFile(fileName, newLine);
         msg = "The contact has been successfully added."
         win.webContents.send('return:addContactSuccess', msg, contact);
@@ -97,16 +104,26 @@ app.on('window-all-closed', () => {
 * @param {string} charType - the character code of the text file to search.
 * @return - returns a boolean value of false if the file does not contain the string and a value of true if it does contain the string.
 */
-let textFileContains = function(string, filePath, charType){
+let checkIfExists = function(string, filePath, charType){
 
-    let arrToCheck = fs.readFileSync(filePath, charType).split('\n');
+    let fileJSON = JSON.parse(fs.readFileSync('data/emailer.json', charType));
     let result = false;
 
-    arrToCheck.forEach((contact, index) => {
-        if(contact.includes(string)){
-            result = true;
+    console.log(fileJSON);
+
+        let arr = fileJSON['primary-contacts'];
+        let arrLen = arr.length;
+
+        for (var i = 0; i < arrLen; i++){
+            for (var key in arr[i]) {
+                if (arr[i].hasOwnProperty(key) && key === 'email') {
+                    var val = arr[i][key];
+                    if(val === string){
+                        result = true;
+                    }
+                }
+            }
         }
-    });
     return result;
 };
 
