@@ -39,7 +39,7 @@ define([
              * A function to create, if not yet created, a new DrawerListViewModel, fetch the Drawer list data and render the Drawer List View html
              * template and returned Drawer list data to the UI.
              */
-            this.renderDrawerListView = function() {
+            this.renderDrawerListView = function(emailer, view) {
 
                 // if the drawerListViewModel has not been created previously.
                 if (!_this.drawerListViewModel) {
@@ -60,9 +60,8 @@ define([
                     ko.applyBindings(_this.drawerListViewModel, $('#drawer-menu-container')[0]);
 
                     // if the drawerListViewModel has already been rendered.
-                } else {
-
                 }
+                _this.renderViews(emailer, view)
             };
 
 
@@ -80,8 +79,10 @@ define([
                         'css!css/error404-view.css',
                         'css!css/create-emailer-view.css',
                         'css!css/edit-emailer-view.css',
+                        'emailer_list_view_model',
                         'create_emailer_view_model',
                         'edit_emailer_view_model',
+                        'settings_view_model',
                         'error404_view_model'
                     ],
                     function(
@@ -89,8 +90,10 @@ define([
                         error404Css,
                         createEmailerCss,
                         editEmailerCss,
+                        EmailerListViewModel,
                         CreateEmailerViewModel,
                         EditEmailerViewModel,
+                        SettingsViewModel,
                         Error404ViewModel
                     ) {
                         let isError = false;
@@ -100,9 +103,21 @@ define([
 
                         switch (view) {
 
-                            case 'createEmailer':
+                            case 'listEmailer':
 
-                                window.alert("Routed to create");
+                                // Creating an object literal containing the necessary data to later (after receiving a data response) render
+                                // the view corresponding to the data returned.
+                                viewConfigData = {
+                                    viewVariable: 'emailerListView',
+                                    viewModelVariable: 'emailerListViewModel',
+                                    viewModelConstructor: EmailerListViewModel,
+                                    containerView: '#emailer-list-container-view',
+                                    template: tpl.get('emailer-list-view'),
+                                    el: '#emailer-list-view',
+                                };
+                                break;
+
+                            case 'createEmailer':
 
                                 // Creating an object literal containing the necessary data to later (after receiving a data response) render
                                 // the view corresponding to the data returned.
@@ -180,7 +195,7 @@ define([
 
                         } else {
 
-                            _this.showView();
+                            _this.toggleViews(viewConfigData);
 
                         }
                     });
@@ -197,7 +212,7 @@ define([
              */
             this.renderView = function(data, vcd, isError) {
 
-                // Calling custom function to remove the currently rendered Tab view.
+                // Calling custom function to hide the currently rendered view.
                 _this.hideCurrentView();
 
                 // Creating the new view model from vcd (viewConfigData) parameter.
@@ -256,6 +271,21 @@ define([
                     });
             };
 
+
+
+            /**
+             * a function to hide the previously rendered view.  This function is called prior to showing/rendering of a new view. This is necessary to avoid massive
+             * memory leaks.
+             */
+            this.toggleViews = function(vcd) {
+
+                // if the view exists
+                if (_this.currentView.viewModel) {
+                    _this.currentView.viewModel.showView(false);
+                }
+                _this.currentView = { currentView: $(vcd.el)[0], viewModel: _this[vcd.viewModelVariable] };
+                _this.currentView.viewModel.showView(true); 
+            };
 
 
 
