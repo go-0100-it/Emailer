@@ -15,6 +15,13 @@ define(
          * related to the corresponding events view and creates a two way data binding between the view and the view model for simplifying DOM manipulation.
          */
         var EditEmailerViewModel = function() {
+
+            // creating a template observable to render the views html.
+            this.template = ko.observable();
+
+            // creating an observable to toggle the views state, true for visible and false for hidden.
+            this.showView = ko.observable(true);
+
             // returning the EventsListViewModel
             return this;
         };
